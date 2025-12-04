@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id               String           @id @default(cuid())
+  clerkId          String           @unique
+  email            String           @unique
+  firstName        String?
+  lastName         String?
+  createdAt        DateTime         @default(now()) // memeber since
+  updatedAt        DateTime         @updatedAt
+  watchedHistories WatchedHistory[]
+  favoriteMovies   FavoriteMovie[]
+  reviews          Review[]
+  watchLists       WatchList[]
+  userPreference   UserPreference?
+  recommendations  Recommendation[]
+
+  @@map("users")
+}
+
+model Movie {
+  id               String           @id @default(cuid())
+  title            String
+  poster_path      String
+  backdrop_path    String
+  overview         String
+  release_date     DateTime
+  vote_average     Float
+  genre_ids        Int[]
+  adult            Boolean
+  watchedHistories WatchedHistory[]
+  favoriteMovies   FavoriteMovie[]
+  reviews          Review[]
+  watchLists       WatchList[]
+  recommendations  Recommendation[]
+}
+
+model WatchedHistory {
+  id        String   @id @default(cuid())
+  movieId   String
+  userId    String
+  createdAt DateTime @default(now())
+
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("watched_history")
+}
+
+model WatchList {
+  id        String   @id @default(cuid())
+  movieId   String
+  userId    String
+  createdAt DateTime @default(now())
+
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("watchlist")
+}
+
+model FavoriteMovie {
+  id        String   @id @default(cuid())
+  movieId   String
+  userId    String
+  createdAt DateTime @default(now())
+
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("favorite_movies")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  movieId   String
+  userId    String
+  createdAt DateTime @default(now())
+
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+}
+
+model UserPreference {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  favoriteGenres  String[] // ["Action", "Sci-Fi"]
+  dislikedGenres  String[] // ["Horror"]
+  moodPreferences String   @db.Text // AI-generated insights
+  lastAnalyzedAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+
+model Recommendation {
+  id          String   @id @default(cuid())
+  userId      String
+  movieId     String
+  score       Float // 0-1 confidence score
+  reason      String   @db.Text // Why this was recommended
+  algorithm   String // "ai", "collaborative", "content-based"
+  createdAt   DateTime @default(now())
+  wasAccepted Boolean? // Did user watch/favorite it?
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, movieId, algorithm])
+  @@index([userId])
+  @@map("recommendations")
+}
