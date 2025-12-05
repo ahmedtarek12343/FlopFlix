@@ -25,6 +25,7 @@ import { SignedIn, SignInButton } from "@clerk/nextjs";
 import { Spinner } from "../ui/spinner";
 import { Badge } from "../ui/badge";
 import { useUser } from "@clerk/nextjs";
+import Link from "next/link";
 const LandingCarousel = () => {
   const { data: movies, isPending } = useDiscoverMovies();
   const { user } = useUser();
@@ -114,9 +115,11 @@ const LandingCarousel = () => {
 
               <div className="flex gap-2 mt-5">
                 {user ? (
-                  <Button className="mt-4 text-lg md:px-5 md:py-6 p-4 rounded-full">
-                    Watch Now
-                  </Button>
+                  <Link href={`/movie/${movie.id}`}>
+                    <Button className="mt-4 text-lg md:px-5 md:py-6 p-4 rounded-full">
+                      Watch Now
+                    </Button>
+                  </Link>
                 ) : (
                   <SignInButton mode="modal">
                     <Button className="mt-4 text-lg md:px-5 md:py-6 p-4 rounded-full">

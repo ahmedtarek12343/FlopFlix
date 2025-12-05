@@ -1,0 +1,33 @@
+import { queryOptions } from "@tanstack/react-query";
+import tmdb from "../tmdb";
+import { TvWithVideos } from "@/types/types";
+
+export const tvOptionsById = (id: number) => {
+  return queryOptions({
+    queryKey: ["tv", id],
+    queryFn: async (): Promise<TvWithVideos> => {
+      const [dataRes, videoRes] = await Promise.all([
+        tmdb.get(`/tv/${id}`),
+        tmdb.get(`/tv/${id}/videos`),
+      ]);
+      const data = dataRes.data;
+      const videos = videoRes.data.results;
+
+      const tv = {
+        ...data,
+        videos: videos,
+      };
+      return tv;
+    },
+  });
+};
+
+export const tvGenreOptions = () => {
+  return queryOptions({
+    queryKey: ["tv-genres"],
+    queryFn: async () => {
+      const res = await tmdb.get("/genre/tv/list");
+      return res.data.genres;
+    },
+  });
+};

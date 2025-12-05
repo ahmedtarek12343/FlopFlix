@@ -20,11 +20,6 @@
   background: var(--primary);
 }
 
-html {
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-}
-
 body {
   overflow-x: hidden;
 }
@@ -323,4 +318,27 @@ body {
 
 .navLink:hover::after {
   transform: scaleX(1);
+}
+
+.scrollbar-hide {
+  /* Hide scrollbar for Chrome, Safari, and Opera */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.thin-scrollbar::-webkit-scrollbar {
+  height: 4px; /* Horizontal scrollbar height */
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 2px;
 }

@@ -55,7 +55,7 @@ const MovieCard = ({ movie }: { movie: MovieType }) => {
           <div className="flex justify-between">
             <h3 className="text-lg font-bold">{movie.title}</h3>
             <p className="text-sm text-gray-500">
-              {new Date(movie.release_date).getFullYear()}
+              {new Date(movie.release_date).getFullYear() || "N/A"}
             </p>
           </div>
           <p className="text-sm text-gray-500 max-w-md w-full">

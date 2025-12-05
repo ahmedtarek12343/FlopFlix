@@ -3,16 +3,20 @@ import { useDiscoverMoviesByPageNum } from "@/hooks/useDiscoverMovies";
 import { MovieType } from "@/types/types";
 import Pagination from "./Pagination";
 import { usePaginationStore } from "@/store/pagination.store";
-import { useEffect } from "react";
 import { Loader2Icon } from "lucide-react";
 import MovieCard from "../MovieCard";
+import MovieFilters from "./MovieFilters";
+import { useFiltersStore } from "@/store/filters.store";
+import TvCard from "../TvCard";
 
 const MovieShow = () => {
-  const { pageNum, setPageNum } = usePaginationStore();
-  const { data, isPending, isError } = useDiscoverMoviesByPageNum(pageNum);
-  useEffect(() => {
-    setPageNum(1);
-  }, []);
+  const { pageNum } = usePaginationStore();
+  const { filters } = useFiltersStore();
+  const { data, isPending, isError } = useDiscoverMoviesByPageNum(
+    pageNum,
+    filters
+  );
+  console.log(data);
 
   if (isPending)
     return (
@@ -33,11 +37,16 @@ const MovieShow = () => {
             Trending films everyone is talking about right now.
           </p>{" "}
         </div>
+        <MovieFilters />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {data?.map((movie: MovieType) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
+        {data?.map((movie: MovieType) =>
+          filters.type === "movie" ? (
+            <MovieCard key={movie.id} movie={movie} />
+          ) : (
+            <TvCard key={movie.id} show={movie} />
+          )
+        )}
       </div>
       <Pagination />
     </div>
