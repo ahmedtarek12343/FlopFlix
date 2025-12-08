@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {
   movieOptions,
-  movieOptionsbyPageNum,
+  movieOptionsByPageNum,
 } from "../lib/queryOptions/movie.options";
 import { MovieFilters } from "@/store/filters.store";
 
@@ -14,5 +14,5 @@ export const useDiscoverMoviesByPageNum = (
   pageNum: number,
   filters: MovieFilters
 ) => {
-  return useQuery(movieOptionsbyPageNum(pageNum, filters));
+  return useQuery(movieOptionsByPageNum(pageNum, filters));
 };

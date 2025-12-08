@@ -4,20 +4,27 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Tilt } from "@/components/motion-primitives/tilt";
-import { Badge } from "./ui/badge";
-import { Skeleton } from "./ui/skeleton";
+import { Badge } from "../ui/badge";
+import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";
 import { TVType } from "@/types/types";
+import { tvOptionsById } from "@/lib/queryOptions/tv.options";
+import { useQueryClient } from "@tanstack/react-query";
 
 const TVCard = ({ show }: { show: TVType }) => {
   const [loading, setLoading] = useState(true);
+
+  const queryClient = useQueryClient();
 
   const src = show.backdrop_path
     ? `https://image.tmdb.org/t/p/original${show.backdrop_path}`
     : "/placeholder.png";
 
   return (
-    <Link href={`/tv/${show.id}`}>
+    <Link
+      href={`/tv/${show.id}`}
+      onMouseEnter={() => queryClient.prefetchQuery(tvOptionsById(show.id))}
+    >
       <Tilt rotationFactor={6}>
         <div className="relative w-full aspect-[16/9] overflow-hidden rounded">
           {/* Skeleton while image loads */}

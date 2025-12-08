@@ -21,11 +21,28 @@ export const syncUser = async () => {
         email: user.emailAddresses[0].emailAddress,
         firstName: user.firstName,
         lastName: user.lastName,
+        avatar_path: user.imageUrl || "./user-icon-placeholder-1.png",
       },
     });
     return newUser;
   } catch (error) {
     console.error(error);
     throw new Error("Failed to sync user");
+  }
+};
+
+export const getUser = async () => {
+  try {
+    const user = await currentUser();
+    if (!user) return;
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        clerkId: user.id,
+      },
+    });
+    return existingUser;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to get user");
   }
 };

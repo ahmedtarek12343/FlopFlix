@@ -4,19 +4,22 @@ import { MovieType } from "@/types/types";
 import Pagination from "./Pagination";
 import { usePaginationStore } from "@/store/pagination.store";
 import { Loader2Icon } from "lucide-react";
-import MovieCard from "../MovieCard";
+import MovieCard from "../Movie/MovieCard";
 import MovieFilters from "./MovieFilters";
 import { useFiltersStore } from "@/store/filters.store";
-import TvCard from "../TvCard";
+import TvCard from "../TvShow/TvCard";
+import { useEffect } from "react";
 
 const MovieShow = () => {
-  const { pageNum } = usePaginationStore();
+  const { pageNum, setPageNum } = usePaginationStore();
   const { filters } = useFiltersStore();
   const { data, isPending, isError } = useDiscoverMoviesByPageNum(
     pageNum,
     filters
   );
-  console.log(data);
+  useEffect(() => {
+    setPageNum(1);
+  }, []);
 
   if (isPending)
     return (

@@ -4,9 +4,14 @@ import { MovieType } from "@/types/types";
 import Pagination from "./Pagination";
 import { usePaginationStore } from "@/store/pagination.store";
 import MovieCard from "../MovieCard";
+import { useEffect } from "react";
 const TopRatedMovieShow = () => {
-  const { pageNum } = usePaginationStore();
+  const { pageNum, setPageNum } = usePaginationStore();
   const { data } = useGetTopRatedMovies(pageNum);
+
+  useEffect(() => {
+    setPageNum(1);
+  }, []);
 
   return (
     <div className="">

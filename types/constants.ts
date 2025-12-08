@@ -4,23 +4,29 @@ import {
   Crown,
   Heart,
   HistoryIcon,
-  Home,
   PopcornIcon,
   Sparkle,
   Star,
   Search,
+  User,
+  TrendingUp,
 } from "lucide-react";
 
 export const sidebarItems = [
   {
     title: "Popular",
     url: "/popular",
-    icon: Home,
+    icon: TrendingUp,
   },
   {
     title: "Top Rated",
     url: "/top-rated",
     icon: Star,
+  },
+  {
+    title: "Actors",
+    url: "/actors",
+    icon: User,
   },
   {
     title: "Search",

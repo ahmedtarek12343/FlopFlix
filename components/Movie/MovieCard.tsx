@@ -4,19 +4,26 @@ import Image from "next/image";
 import { MovieType } from "@/types/types";
 import { Tilt } from "@/components/motion-primitives/tilt";
 import { cn } from "@/lib/utils";
-import { Badge } from "./ui/badge";
-import { Skeleton } from "./ui/skeleton";
+import { Badge } from "../ui/badge";
+import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
+import { movieOptionsById } from "@/lib/queryOptions/movie.options";
+import { useQueryClient } from "@tanstack/react-query";
 
 const MovieCard = ({ movie }: { movie: MovieType }) => {
   const [loading, setLoading] = useState(true);
+
+  const queryClient = useQueryClient();
 
   const src = movie.backdrop_path
     ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
     : "/placeholder.png";
 
   return (
-    <Link href={`/movie/${movie.id}`}>
+    <Link
+      href={`/movie/${movie.id}`}
+      onMouseEnter={() => queryClient.prefetchQuery(movieOptionsById(movie.id))}
+    >
       <Tilt rotationFactor={6}>
         <div className="relative w-full aspect-[16/9] overflow-hidden rounded">
           {/* Skeleton */}
@@ -24,7 +31,7 @@ const MovieCard = ({ movie }: { movie: MovieType }) => {
 
           <Image
             src={src}
-            alt={movie.title}
+            alt={movie.title || "Movie"}
             fill
             loading="lazy"
             className={cn(
@@ -36,18 +43,15 @@ const MovieCard = ({ movie }: { movie: MovieType }) => {
 
           <div className="absolute inset-0 bg-black/20" />
           <div className="absolute top-2 right-2 z-5">
-            {Number(movie.vote_average.toFixed(1)) > 7 ? (
+            {movie.vote_average && Number(movie.vote_average.toFixed(1)) > 7 ? (
               <Badge className="bg-green-500 text-white px-2 py-1 rounded">
                 {movie.vote_average.toFixed(1)}
               </Badge>
             ) : (
               <Badge className="bg-yellow-500 text-white px-2 py-1 rounded">
-                {movie.vote_average.toFixed(1)}
+                {movie.vote_average && movie.vote_average.toFixed(1)}
               </Badge>
             )}
-            <Badge className="bg-gray-500 ml-2 text-white px-2 py-1 rounded">
-              {movie.adult ? "R" : "PG-13"}
-            </Badge>
           </div>
         </div>
 
@@ -59,7 +63,7 @@ const MovieCard = ({ movie }: { movie: MovieType }) => {
             </p>
           </div>
           <p className="text-sm text-gray-500 max-w-md w-full">
-            {movie.overview.slice(0, 100)}...
+            {movie.overview?.slice(0, 100)}...
           </p>
         </div>
       </Tilt>

@@ -67,27 +67,20 @@ const MovieFilters = () => {
         </Button>
       </SheetTrigger>
       <SheetContent className="w-[400px]  sm:w-[540px] overflow-y-auto p-5 scrollbar-hide">
-        <SheetHeader>
-          <SheetTitle>Filter Movies</SheetTitle>
-          <SheetDescription>
-            Refine your movie search with these filters
-          </SheetDescription>
-        </SheetHeader>
-
-        <div>
+        <div className="mt-10">
           <SheetTitle>Type</SheetTitle>
           <SheetDescription>
             Select the type of content you want to filter
           </SheetDescription>
           <div className="grid grid-cols-2 gap-2 mt-2">
             <Button
-              className={filters.type === "movie" ? "default" : "outline"}
+              variant={filters.type === "movie" ? "default" : "outline"}
               onClick={() => setType("movie")}
             >
               Movie
             </Button>
             <Button
-              className={filters.type === "tv" ? "default" : "outline"}
+              variant={filters.type === "tv" ? "default" : "outline"}
               onClick={() => setType("tv")}
             >
               TV Show

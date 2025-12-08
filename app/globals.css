@@ -342,3 +342,18 @@ body {
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 2px;
 }
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-zoomIn {
+  animation: zoomIn 0.25s ease-out forwards;
+}

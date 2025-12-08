@@ -1,8 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import tmdb from "../tmdb";
 import omdb from "../omdb";
-import { Movie } from "@/app/generated/prisma/client";
-import { MovieWithVideos, Video } from "@/types/types";
+import { MovieType } from "@/types/types";
 import { MovieFilters } from "@/store/filters.store";
 
 export const movieOptions = queryOptions({
@@ -15,7 +14,7 @@ export const movieOptions = queryOptions({
     const movies = moviesRes.data;
     const genres = genresRes.data.genres;
 
-    const moviesWithGenres = movies.results.map((movie: Movie) => {
+    const moviesWithGenres = movies.results.map((movie: MovieType) => {
       return {
         ...movie,
         genres: movie.genre_ids.map((id) => {
@@ -29,29 +28,28 @@ export const movieOptions = queryOptions({
   },
 });
 
-export const movieOptionsbyPageNum = (
+export const movieOptionsByPageNum = (
   pageNum: number,
   filters: MovieFilters
 ) => {
   return queryOptions({
-    queryKey: ["content", pageNum, { ...filters }],
+    queryKey: ["content", pageNum, JSON.stringify(filters)],
     queryFn: async () => {
       const isMovie = filters.type === "movie";
 
-      const moviesRes = await tmdb.get(`/discover/${filters.type}`, {
+      const response = await tmdb.get(`/discover/${filters.type}`, {
         params: {
           page: pageNum,
           sort_by: filters.sortBy,
           with_genres: filters.genres.join(","),
-
-          // 👇 dynamic year param
           ...(filters.year && {
             [isMovie ? "year" : "first_air_date_year"]: filters.year,
           }),
         },
       });
 
-      return moviesRes.data.results;
+      const results = response.data.results;
+      return results;
     },
   });
 };
@@ -98,26 +96,81 @@ const RatingLogos = {
 export const movieOptionsById = (id: number) => {
   return queryOptions({
     queryKey: ["movie", id],
-    queryFn: async (): Promise<MovieWithVideos> => {
-      const [dataRes, videoRes] = await Promise.all([
-        tmdb.get(`/movie/${id}`),
-        tmdb.get(`/movie/${id}/videos`),
-      ]);
+    queryFn: async (): Promise<MovieType> => {
+      const dataRes = await tmdb.get(`/movie/${id}`);
       const data = dataRes.data;
-      const videos = videoRes.data.results;
 
       const omdbRes = await omdb.get(`/?i=${data.imdb_id}`);
       const omdbData = omdbRes.data;
       const movie = {
         ...data,
-        videos: videos,
-        ...omdbData,
-        Ratings: omdbData.Ratings.map((rating: any) => ({
-          ...rating,
-          Image: RatingLogos[rating.Source as keyof typeof RatingLogos],
-        })),
+        ...(omdbData || {}),
+        Ratings:
+          omdbData.Ratings.map((rating: any) => ({
+            ...rating,
+            Image: RatingLogos[rating.Source as keyof typeof RatingLogos],
+          })) || [],
       };
       return movie;
+    },
+  });
+};
+
+export const videoOptions = (id: number) => {
+  return queryOptions({
+    queryKey: ["videos", id],
+    queryFn: async () => {
+      const videosRes = await tmdb.get(`/movie/${id}/videos`);
+      const videos = videosRes.data.results.filter(
+        (video: any) => video.type === "Trailer"
+      );
+      return videos;
+    },
+  });
+};
+
+export const creditsOptions = (id: number) => {
+  return queryOptions({
+    queryKey: ["credits", id],
+    queryFn: async () => {
+      const creditsRes = await tmdb.get(`/movie/${id}/credits`);
+      const credits = creditsRes.data.cast.filter(
+        (cast: any) => cast.known_for_department === "Acting"
+      );
+      return credits;
+    },
+  });
+};
+
+export const reviewsOptions = (id: number) => {
+  return queryOptions({
+    queryKey: ["reviews", id],
+    queryFn: async () => {
+      const reviewsRes = await tmdb.get(`/movie/${id}/reviews`);
+      const reviews = reviewsRes.data;
+      return reviews;
+    },
+  });
+};
+
+export const similarOptions = (id: number) => {
+  return queryOptions({
+    queryKey: ["similar", id],
+    queryFn: async () => {
+      const similarRes = await tmdb.get(`/movie/${id}/similar`);
+      const similar = similarRes.data;
+      return similar;
+    },
+  });
+};
+
+export const imagesOptions = (id: number) => {
+  return queryOptions({
+    queryKey: ["images", id],
+    queryFn: async () => {
+      const imagesRes = await tmdb.get(`/movie/${id}/images`);
+      const images = imagesRes.data;
+      return images;
     },
   });
 };

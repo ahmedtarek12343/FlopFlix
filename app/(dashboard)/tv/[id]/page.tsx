@@ -1,4 +1,4 @@
-import TvShowCase from "@/components/TvShowCase";
+import TvShowCase from "@/components/TvShow/TvShowCase";
 
 const page = async ({ params }: { params: { id: string } }) => {
   const { id } = await params;
