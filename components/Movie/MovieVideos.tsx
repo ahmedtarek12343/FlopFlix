@@ -1,10 +1,10 @@
-import { useGetMovieVideosByID } from "@/hooks/useGetMovieByID";
+import { MovieType } from "@/types/types";
 
-const MovieVideos = ({ id }: { id: number }) => {
-  const { data: videos } = useGetMovieVideosByID(id);
+const MovieVideos = ({ fullMovie }: { fullMovie: MovieType }) => {
+  const videos = fullMovie?.videos?.results;
   const trailerKey = videos?.find((v: any) => v.type === "Trailer")?.key;
   return (
-    <section>
+    <section className="py-20">
       <h2 className="text-3xl font-bold my-6">Official Trailer</h2>
       <div className="">
         {videos && (

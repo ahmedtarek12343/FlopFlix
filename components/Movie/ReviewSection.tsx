@@ -1,16 +1,19 @@
-import { useGetMovieReviewsByID } from "@/hooks/useGetMovieByID";
-import { MovieReview } from "@/types/types";
-import Image from "next/image";
+import { MovieReview, MovieType, TvWithExtras } from "@/types/types";
 import { Plus, Star } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import MovieAddReview from "./MovieAddReview";
 import ReviewCard from "./ReviewCard";
 import { useGetReviews } from "@/hooks/useGetReviews";
+import { useFiltersStore } from "@/store/filters.store";
 
-const ReviewSection = ({ id }: { id: number }) => {
-  const { data: reviews } = useGetMovieReviewsByID(id);
-  const { data: DBreviews } = useGetReviews(id);
+const ReviewSection = ({
+  fullMovie,
+}: {
+  fullMovie: MovieType | TvWithExtras;
+}) => {
+  const { filters } = useFiltersStore();
+  const { data: DBreviews } = useGetReviews(fullMovie.id, filters.type);
   const [showReviewModal, setShowReviewModal] = useState(false);
 
   return (
@@ -19,11 +22,11 @@ const ReviewSection = ({ id }: { id: number }) => {
       <section className="py-10">
         <h2 className="text-3xl font-bold mb-6">Reviews</h2>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(600px,1fr))] gap-8">
-          {reviews?.results.length === 0 && (
+          {fullMovie?.reviews?.results.length === 0 && (
             <p className="pl-5 font-semibold">No reviews found</p>
           )}
-          {reviews &&
-            reviews.results
+          {fullMovie?.reviews &&
+            fullMovie?.reviews.results
               .slice(0, 3)
               .map((review: MovieReview) => (
                 <ReviewCard review={review} key={review.id} />
@@ -41,7 +44,7 @@ const ReviewSection = ({ id }: { id: number }) => {
       <MovieAddReview
         open={showReviewModal}
         onOpenChange={setShowReviewModal}
-        movieId={id}
+        movieId={fullMovie.id}
       />
     </div>
   );

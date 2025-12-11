@@ -1,3 +1,5 @@
+import TvSeasonDetails from "@/components/TvShow/TvSeasonDetails";
+
 const page = async ({
   params,
 }: {
@@ -6,7 +8,7 @@ const page = async ({
   const { id, seasonNumber } = await params;
   return (
     <div>
-      page {id} {seasonNumber}
+      <TvSeasonDetails id={id} seasonNumber={seasonNumber} />
     </div>
   );
 };

@@ -1,14 +1,14 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import {
-  actorOptions,
-  actorOptionsCombinedCredits,
+  allActorOptions,
+  popularActorsOptions,
 } from "@/lib/queryOptions/actor.options";
 
 export const useGetActor = (id: string) => {
-  return useQuery(actorOptions(id));
+  return useQuery(allActorOptions(id));
 };
 
-export const useGetActorCredits = (id: string) => {
-  return useQuery(actorOptionsCombinedCredits(id));
+export const useGetPopularActors = () => {
+  return useQuery(popularActorsOptions());
 };

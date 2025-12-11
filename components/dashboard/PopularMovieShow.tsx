@@ -1,6 +1,6 @@
 "use client";
 import { useDiscoverMoviesByPageNum } from "@/hooks/useDiscoverMovies";
-import { MovieType } from "@/types/types";
+import { MovieType, TvWithExtras } from "@/types/types";
 import Pagination from "./Pagination";
 import { usePaginationStore } from "@/store/pagination.store";
 import { Loader2Icon } from "lucide-react";
@@ -17,6 +17,7 @@ const MovieShow = () => {
     pageNum,
     filters
   );
+
   useEffect(() => {
     setPageNum(1);
   }, []);
@@ -43,11 +44,11 @@ const MovieShow = () => {
         <MovieFilters />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {data?.map((movie: MovieType) =>
+        {data?.map((movie: any) =>
           filters.type === "movie" ? (
-            <MovieCard key={movie.id} movie={movie} />
+            <MovieCard key={movie.id} movie={movie as MovieType} />
           ) : (
-            <TvCard key={movie.id} show={movie} />
+            <TvCard key={movie.id} show={movie as TvWithExtras} />
           )
         )}
       </div>

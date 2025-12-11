@@ -16,7 +16,7 @@ const LazyImage = ({ ...props }: ImageProps) => {
         width={100}
         height={100}
         onLoad={() => setIsLoaded(true)}
-        className="w-full h-full"
+        className="w-full h-full hover:scale-105 transition-all duration-300"
       />
     </>
   );

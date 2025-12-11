@@ -5,6 +5,7 @@ export interface GradientTextProps {
   colors: string[];
   animationSpeed: number;
   showBorder: boolean;
+  className?: string;
 }
 
 declare const GradientText: FC<GradientTextProps>;

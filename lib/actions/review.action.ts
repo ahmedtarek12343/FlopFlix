@@ -5,9 +5,10 @@ import prisma from "../prisma";
 import { getUser } from "./user.action";
 
 interface AddReviewProps {
-  movieId: number;
+  contentId: number;
   content: string;
   rating: number;
+  type: string;
 }
 
 export const addReview = async (data: AddReviewProps) => {
@@ -17,17 +18,19 @@ export const addReview = async (data: AddReviewProps) => {
     if (!existingUser || !user) throw new Error("User not found");
     const existingReview = await prisma.review.findFirst({
       where: {
-        movieId: data.movieId,
+        contentId: data.contentId,
+        type: data.type,
         userId: existingUser.id,
       },
     });
     if (existingReview) throw new Error("Review already exists");
     const review = await prisma.review.create({
       data: {
-        movieId: data.movieId,
+        contentId: data.contentId,
         content: data.content,
         rating: data.rating,
         userId: existingUser.id,
+        type: data.type,
       },
     });
     return review;
@@ -37,13 +40,14 @@ export const addReview = async (data: AddReviewProps) => {
   }
 };
 
-export const getReviews = async (movieId: number) => {
+export const getReviews = async (contentId: number, type: string) => {
   try {
     const user = await currentUser();
     if (!user) throw new Error("User not found");
     const reviews = await prisma.review.findMany({
       where: {
-        movieId,
+        contentId: contentId,
+        type: type,
       },
       include: {
         user: true,

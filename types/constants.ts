@@ -19,11 +19,6 @@ export const sidebarItems = [
     icon: TrendingUp,
   },
   {
-    title: "Top Rated",
-    url: "/top-rated",
-    icon: Star,
-  },
-  {
     title: "Actors",
     url: "/actors",
     icon: User,

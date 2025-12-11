@@ -24,6 +24,7 @@ import {
 } from "../ui/select";
 import { useState } from "react";
 import { useAddReview } from "@/lib/mutations/useAddReview";
+import { useFiltersStore } from "@/store/filters.store";
 import { toast } from "sonner";
 const MovieAddReview = ({
   open,
@@ -38,6 +39,7 @@ const MovieAddReview = ({
     content: "",
     rating: 1,
   });
+  const { filters } = useFiltersStore();
 
   const { mutate, isPending } = useAddReview();
 
@@ -48,7 +50,8 @@ const MovieAddReview = ({
     }
     mutate({
       ...formData,
-      movieId,
+      contentId: movieId,
+      type: filters.type,
     });
     onOpenChange(false);
     setFormData({

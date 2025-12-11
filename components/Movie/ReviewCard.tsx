@@ -3,6 +3,7 @@ import { MovieReview } from "@/types/types";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
 
 const ReviewCard = ({ review }: { review: MovieReview }) => {
   const [showFullReview, setShowFullReview] = useState<{
@@ -37,20 +38,9 @@ const ReviewCard = ({ review }: { review: MovieReview }) => {
             {review.author_details.username}
           </p>
         </div>
-        <div className="flex gap-2 mb-auto mt-2">
-          {Array.from({
-            length: review.author_details.rating,
-          }).map((_, index) => (
-            <Star
-              key={index}
-              className="size-4 "
-              fill="yellow"
-              style={{
-                color: "yellow",
-              }}
-            />
-          ))}
-        </div>
+        <Badge className="flex gap-2 items-center mb-auto mt-1">
+          {review.author_details.rating || "??"}/10{" "}
+        </Badge>
         <p className="ml-auto text-sm text-gray-500">
           {new Date(review.created_at.trim()).toLocaleDateString()}
         </p>

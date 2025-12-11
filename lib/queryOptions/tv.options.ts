@@ -1,27 +1,21 @@
 import { queryOptions } from "@tanstack/react-query";
 import tmdb from "../tmdb";
-import { TvWithVideos } from "@/types/types";
-import { genderConverter } from "./actor.options";
+import { TvWithExtras } from "@/types/types";
 
-export const tvOptionsById = (id: number) => {
-  return queryOptions({
+export const tvOptionsById = (id: number) =>
+  queryOptions({
     queryKey: ["tv", id],
-    queryFn: async (): Promise<TvWithVideos> => {
-      const [dataRes, videoRes] = await Promise.all([
-        tmdb.get(`/tv/${id}`),
-        tmdb.get(`/tv/${id}/videos`),
-      ]);
-      const data = dataRes.data;
-      const videos = videoRes.data.results;
+    queryFn: async (): Promise<TvWithExtras> => {
+      const res = await tmdb.get(`/tv/${id}`, {
+        params: {
+          append_to_response:
+            "images,videos,credits,recommendations,similar,keywords,reviews",
+        },
+      });
 
-      const tv = {
-        ...data,
-        videos: videos,
-      };
-      return tv;
+      return res.data;
     },
   });
-};
 
 export const tvGenreOptions = () => {
   return queryOptions({
@@ -33,49 +27,16 @@ export const tvGenreOptions = () => {
   });
 };
 
-export const tvAggregateCredits = (id: number) =>
-  queryOptions({
-    queryKey: ["tvCredit", id],
+export const tvSeasonDetails = (id: number, seasonNumber: number) => {
+  return queryOptions({
+    queryKey: ["tvSeasonDetails", id, seasonNumber],
     queryFn: async () => {
-      const res = await tmdb.get(`/tv/${id}/aggregate_credits`);
-      return res.data.cast
-        .filter(
-          (show: { known_for_department: string }) =>
-            show.known_for_department === "Acting"
-        )
-        .map((show: { gender: number }) => {
-          return {
-            ...show,
-            gender: genderConverter[show.gender],
-          };
-        })
-        .slice(0, 50);
+      const res = await tmdb.get(`/tv/${id}/season/${seasonNumber}`, {
+        params: {
+          append_to_response: "images,credits,videos,external_ids,changes",
+        },
+      });
+      return res.data;
     },
   });
-
-export const tvImages = (id: number) =>
-  queryOptions({
-    queryKey: ["tvImages", id],
-    queryFn: async () => {
-      const res = await tmdb.get(`/tv/${id}/images`);
-      return res.data.backdrops;
-    },
-  });
-
-export const tvReviews = (id: number) =>
-  queryOptions({
-    queryKey: ["tvReviews", id],
-    queryFn: async () => {
-      const res = await tmdb.get(`/tv/${id}/reviews`);
-      return res.data.results;
-    },
-  });
-
-export const tvSimilar = (id: number) =>
-  queryOptions({
-    queryKey: ["tvSimilar", id],
-    queryFn: async () => {
-      const res = await tmdb.get(`/tv/${id}/similar`);
-      return res.data.results;
-    },
-  });
+};

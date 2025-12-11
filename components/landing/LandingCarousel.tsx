@@ -91,7 +91,7 @@ const LandingCarousel = () => {
               <div className="flex flex-wrap gap-4">
                 {movie.genres && (
                   <div className="flex gap-2">
-                    {movie.genres.map((genre: string) => (
+                    {movie.genres.map((genre: any) => (
                       <Badge key={genre}>{genre}</Badge>
                     ))}
                   </div>

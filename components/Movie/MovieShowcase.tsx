@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  useGetMovieByID,
-  useGetMovieImagesByID,
-  useGetMovieSimilarByID,
-} from "@/hooks/useGetMovieByID";
+import { useGetMovieByID } from "@/hooks/useGetMovieByID";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "../ui/button";
@@ -20,22 +16,36 @@ import ReviewSection from "./ReviewSection";
 import MovieGallery from "./MovieGallery";
 import MovieVideos from "./MovieVideos";
 import MovieCast from "./MovieCast";
+import { useAddHistory } from "@/lib/mutations/useAddHistory";
 
 const MovieShowcase = ({ id }: { id: number }) => {
   const { data: movie, isPending, isError } = useGetMovieByID(id);
-  const { gallery, index, setGallery, incrementIndex, decrementIndex } =
-    useGalleryStore();
-  const { data: similar } = useGetMovieSimilarByID(id);
+
   const {
-    data: images,
-    isPending: isImagesPending,
-    isError: isImagesError,
-  } = useGetMovieImagesByID(id);
+    gallery,
+    index,
+    hasOpened,
+    setGallery,
+    incrementIndex,
+    decrementIndex,
+    setHasOpened,
+  } = useGalleryStore();
+
+  const { mutate: addHistory } = useAddHistory();
 
   useEffect(() => {
-    if (images) {
+    addHistory({
+      ...movie,
+      contentId: id,
+      type: "Movie",
+      genres: movie?.genres?.map((g: any) => g.name),
+    });
+  }, []);
+
+  useEffect(() => {
+    if (movie?.images && hasOpened) {
       setGallery(
-        `https://image.tmdb.org/t/p/original${images.backdrops[index].file_path}`
+        `https://image.tmdb.org/t/p/original${movie.images.backdrops[index].file_path}`
       );
     }
   }, [index]);
@@ -90,7 +100,10 @@ const MovieShowcase = ({ id }: { id: number }) => {
               {/* Close button (positioned relative to the image container) */}
               <Button
                 variant="ghost"
-                onClick={() => setGallery("")}
+                onClick={() => {
+                  setGallery("");
+                  setHasOpened(false);
+                }}
                 className="absolute top-3 right-3 z-70"
               >
                 <X className="size-6 text-white" />
@@ -115,7 +128,10 @@ const MovieShowcase = ({ id }: { id: number }) => {
               </Button>
             </div>
             <div
-              onClick={() => setGallery("")}
+              onClick={() => {
+                setGallery("");
+                setHasOpened(false);
+              }}
               className="fixed inset-0 z-52 bg-black/50 backdrop-blur-sm"
             ></div>
           </div>
@@ -125,8 +141,8 @@ const MovieShowcase = ({ id }: { id: number }) => {
         <ImageTrail
           key={movie.id}
           items={
-            (images &&
-              images.backdrops
+            (movie?.images &&
+              movie?.images.backdrops
                 .slice(0, 6)
                 .map(
                   (b: any) => `https://image.tmdb.org/t/p/w500${b.file_path}`
@@ -225,12 +241,12 @@ const MovieShowcase = ({ id }: { id: number }) => {
                 </div>
 
                 <div className="flex flex-wrap gap-3">
-                  {movie.Genre?.split(", ").map((g: string) => (
+                  {movie.genres?.map((g: { id: number; name: string }) => (
                     <Badge
-                      key={g}
+                      key={g.id}
                       className="bg-primary/70 border-primary text-white px-4 py-2"
                     >
-                      {g.trim()}
+                      {g.name.trim()}
                     </Badge>
                   ))}
                 </div>
@@ -243,21 +259,19 @@ const MovieShowcase = ({ id }: { id: number }) => {
           </div>
         </div>
       )}
-      {/* Cast */}
-      <MovieCast movie={movie} id={id} />
+      <MovieCast fullMovie={movie} />
       {/* Reviews */}
-      <ReviewSection id={id} />
-
+      <ReviewSection fullMovie={movie} />
       {/* Gallery */}
-      <MovieGallery id={id} />
+      <MovieGallery fullMovie={movie} />
       {/* Videos */}
-      <MovieVideos id={id} />
+      <MovieVideos fullMovie={movie} />
       {/* Similar Movies */}
-      <section>
-        <h2 className="text-3xl font-bold my-6">Similar Movies</h2>
+      <section className="py-20">
+        <h2 className="text-3xl font-bold my-6">You may also like</h2>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-6">
-          {similar &&
-            similar.results
+          {movie?.similar &&
+            movie?.similar.results
               .slice(0, 8)
               .map((movie: MovieType) => (
                 <MovieCard movie={movie} key={movie.id} />

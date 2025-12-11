@@ -18,58 +18,78 @@ model User {
   updatedAt   DateTime @updatedAt
 
   watchedHistories WatchedHistory[]
-  favoriteMovies   FavoriteMovie[]
+  favorites        Favorites[]
   reviews          Review[]
   watchLists       WatchList[]
-  userPreference   UserPreference?
+  userPreference   UserPreference[]
   recommendations  Recommendation[]
 
   @@map("users")
 }
 
 model WatchedHistory {
-  id        String   @id @default(cuid())
-  movieId   Int
-  userId    String
-  createdAt DateTime @default(now())
+  id            String   @id @default(cuid())
+  contentId     Int
+  title         String?
+  backdrop_path String?
+  overview      String?
+  release_date  String?
+  vote_average  Float?
+  genres        String[]
+  userId        String
+  type          String
+  createdAt     DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, movieId])
+  @@unique([userId, contentId, type])
   @@index([userId])
   @@map("watched_history")
 }
 
 model WatchList {
-  id        String   @id @default(cuid())
-  movieId   Int
-  userId    String
-  createdAt DateTime @default(now())
+  id            String   @id @default(cuid())
+  contentId     Int
+  title         String?
+  backdrop_path String?
+  overview      String?
+  release_date  String?
+  vote_average  Float?
+  userId        String
+  type          String
+  createdAt     DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, movieId])
+  @@unique([userId, contentId, type])
   @@index([userId])
   @@map("watchlist")
 }
 
-model FavoriteMovie {
-  id        String   @id @default(cuid())
-  movieId   Int
-  userId    String
-  createdAt DateTime @default(now())
+model Favorites {
+  id            String        @id @default(cuid())
+  contentId     Int
+  title         String?
+  backdrop_path String?
+  overview      String?
+  release_date  String?
+  vote_average  Float?
+  userId        String
+  type          WatchListType
+  createdAt     DateTime      @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, movieId])
+  @@unique([userId, contentId, type])
   @@index([userId])
   @@map("favorite_movies")
 }
 
 model Review {
   id        String   @id @default(cuid())
-  movieId   Int
+  contentId Int
   userId    String
+  type      String
   content   String?  @db.Text
   rating    Int?
   createdAt DateTime @default(now())
@@ -96,7 +116,8 @@ model UserPreference {
 model Recommendation {
   id          String   @id @default(cuid())
   userId      String
-  movieId     Int
+  contentId   Int
+  type        String
   score       Float
   reason      String   @db.Text
   algorithm   String
@@ -105,7 +126,13 @@ model Recommendation {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, movieId, algorithm])
+  @@unique([userId, contentId, type, algorithm])
   @@index([userId])
   @@map("recommendations")
+}
+
+enum WatchListType {
+  Movie
+  TV
+  Actor
 }

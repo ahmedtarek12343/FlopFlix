@@ -8,25 +8,30 @@ export const genderConverter: Record<number, string> = {
   3: "Non-binary",
 };
 
-export const actorOptions = (id: string) =>
+export const allActorOptions = (id: string) =>
   queryOptions({
     queryKey: ["actors", id],
     queryFn: async () => {
-      const actorsRes = await tmdb.get(`/person/${id}`);
-      const actors = actorsRes.data;
+      const res = await tmdb.get(`/person/${id}`, {
+        params: {
+          append_to_response:
+            "movie_credits,tv_credits,combined_credits,images,external_ids,tagged_images",
+        },
+      });
+      const actor = res.data;
       return {
-        ...actors,
-        gender: genderConverter[actors.gender],
+        ...actor,
+        gender: genderConverter[actor.gender],
       };
     },
   });
 
-export const actorOptionsCombinedCredits = (id: string) =>
+export const popularActorsOptions = () =>
   queryOptions({
-    queryKey: ["actor-credits", id],
+    queryKey: ["actors"],
     queryFn: async () => {
-      const actorRes = await tmdb.get(`/person/${id}/combined_credits`);
-      const actor = actorRes.data;
-      return actor.cast;
+      const res = await tmdb.get(`/person/popular`);
+      const actors = res.data.results;
+      return actors;
     },
   });

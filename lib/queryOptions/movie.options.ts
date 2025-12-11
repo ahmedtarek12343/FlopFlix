@@ -54,21 +54,6 @@ export const movieOptionsByPageNum = (
   });
 };
 
-export const topRatedMovieOptions = (pageNum: number) => {
-  return queryOptions({
-    queryKey: ["top-rated-movies", pageNum],
-    queryFn: async () => {
-      const moviesRes = await tmdb.get("/movie/top_rated", {
-        params: {
-          page: pageNum,
-        },
-      });
-      const movies = moviesRes.data;
-      return movies.results;
-    },
-  });
-};
-
 export const searchMovieOptions = (query: string) => {
   return queryOptions({
     queryKey: ["search-movies", query],
@@ -97,7 +82,12 @@ export const movieOptionsById = (id: number) => {
   return queryOptions({
     queryKey: ["movie", id],
     queryFn: async (): Promise<MovieType> => {
-      const dataRes = await tmdb.get(`/movie/${id}`);
+      const dataRes = await tmdb.get(`/movie/${id}`, {
+        params: {
+          append_to_response:
+            "images,videos,credits,recommendations,similar,release_dates,reviews,keywords",
+        },
+      });
       const data = dataRes.data;
 
       const omdbRes = await omdb.get(`/?i=${data.imdb_id}`);
@@ -112,65 +102,6 @@ export const movieOptionsById = (id: number) => {
           })) || [],
       };
       return movie;
-    },
-  });
-};
-
-export const videoOptions = (id: number) => {
-  return queryOptions({
-    queryKey: ["videos", id],
-    queryFn: async () => {
-      const videosRes = await tmdb.get(`/movie/${id}/videos`);
-      const videos = videosRes.data.results.filter(
-        (video: any) => video.type === "Trailer"
-      );
-      return videos;
-    },
-  });
-};
-
-export const creditsOptions = (id: number) => {
-  return queryOptions({
-    queryKey: ["credits", id],
-    queryFn: async () => {
-      const creditsRes = await tmdb.get(`/movie/${id}/credits`);
-      const credits = creditsRes.data.cast.filter(
-        (cast: any) => cast.known_for_department === "Acting"
-      );
-      return credits;
-    },
-  });
-};
-
-export const reviewsOptions = (id: number) => {
-  return queryOptions({
-    queryKey: ["reviews", id],
-    queryFn: async () => {
-      const reviewsRes = await tmdb.get(`/movie/${id}/reviews`);
-      const reviews = reviewsRes.data;
-      return reviews;
-    },
-  });
-};
-
-export const similarOptions = (id: number) => {
-  return queryOptions({
-    queryKey: ["similar", id],
-    queryFn: async () => {
-      const similarRes = await tmdb.get(`/movie/${id}/similar`);
-      const similar = similarRes.data;
-      return similar;
-    },
-  });
-};
-
-export const imagesOptions = (id: number) => {
-  return queryOptions({
-    queryKey: ["images", id],
-    queryFn: async () => {
-      const imagesRes = await tmdb.get(`/movie/${id}/images`);
-      const images = imagesRes.data;
-      return images;
     },
   });
 };
