@@ -26,12 +26,13 @@ const AnalyticsComp = () => {
     );
 
   // Filter by type
-  const movieHistory = history?.filter((item) => item.type === "Movie") || [];
-  const tvHistory = history?.filter((item) => item.type === "TV") || [];
+  const movieHistory =
+    history?.filter((item: any) => item.type === "Movie") || [];
+  const tvHistory = history?.filter((item: any) => item.type === "TV") || [];
 
   const getGenreData = (list: any[]) => {
     const genreCounts: Record<string, number> = {};
-    list.forEach((item) => {
+    list.forEach((item: any) => {
       item.genres?.forEach((genre: string) => {
         genreCounts[genre] = (genreCounts[genre] || 0) + 1;
       });
@@ -73,7 +74,7 @@ const AnalyticsComp = () => {
       <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
         Latest Searches
       </h2>
-      {history?.slice(0, 3)?.map((item) => (
+      {history?.slice(0, 3)?.map((item: any) => (
         <div
           key={item.id}
           className="flex justify-between items-center p-4 bg-card border rounded-2xl"
