@@ -29,11 +29,6 @@ export const sidebarItems = [
     icon: Search,
   },
   {
-    title: "Watchlist",
-    url: "/watchlist",
-    icon: PopcornIcon,
-  },
-  {
     title: "Favorites",
     url: "/favorites",
     icon: Heart,

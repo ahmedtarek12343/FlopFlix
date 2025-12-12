@@ -5,7 +5,6 @@ import { Loader2Icon, ArrowLeft, X, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import MovieGallery from "../Movie/MovieGallery";
 import { useGalleryStore } from "@/store/gallery.store";
 import { useEffect } from "react";
 import TvPoster from "./TvPoster";
@@ -17,7 +16,6 @@ import { addToHistory } from "@/lib/actions/history.action";
 
 const TvShowCase = ({ id }: { id: number }) => {
   const { data: show, isPending, isError } = useTvOptionsById(id);
-  console.log(show);
 
   const {
     index,

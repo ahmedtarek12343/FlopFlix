@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { MovieReview } from "@/types/types";
 import Image from "next/image";
-import { Star } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 

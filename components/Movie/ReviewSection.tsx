@@ -1,5 +1,5 @@
 import { MovieReview, MovieType, TvWithExtras } from "@/types/types";
-import { Plus, Star } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import MovieAddReview from "./MovieAddReview";

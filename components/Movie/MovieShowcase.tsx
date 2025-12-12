@@ -34,6 +34,7 @@ const MovieShowcase = ({ id }: { id: number }) => {
   const { mutate: addHistory } = useAddHistory();
 
   useEffect(() => {
+    if (!movie) return; // wait until movie is loaded
     addHistory({
       ...movie,
       contentId: id,

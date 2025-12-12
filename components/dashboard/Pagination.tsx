@@ -1,4 +1,3 @@
-// components/dashboard/Pagination.tsx - Updated
 "use client";
 import { usePaginationStore } from "@/store/pagination.store";
 import { Button } from "../ui/button";

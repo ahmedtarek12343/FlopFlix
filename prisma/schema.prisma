@@ -21,8 +21,7 @@ model User {
   favorites        Favorites[]
   reviews          Review[]
   watchLists       WatchList[]
-  userPreference   UserPreference[]
-  recommendations  Recommendation[]
+  chatMessages     ChatMessage[]
 
   @@map("users")
 }
@@ -100,35 +99,19 @@ model Review {
   @@map("reviews")
 }
 
-model UserPreference {
-  id              String   @id @default(cuid())
-  userId          String   @unique
-  favoriteGenres  String[]
-  dislikedGenres  String[]
-  moodPreferences String   @db.Text
-  lastAnalyzedAt  DateTime @default(now())
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  sessionId String
+  role      String
+  parts     Json
+  createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("user_preferences")
-}
-
-model Recommendation {
-  id          String   @id @default(cuid())
-  userId      String
-  contentId   Int
-  type        String
-  score       Float
-  reason      String   @db.Text
-  algorithm   String
-  createdAt   DateTime @default(now())
-  wasAccepted Boolean?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, contentId, type, algorithm])
   @@index([userId])
-  @@map("recommendations")
+  @@index([sessionId])
+  @@map("chat_messages")
 }
 
 enum WatchListType {

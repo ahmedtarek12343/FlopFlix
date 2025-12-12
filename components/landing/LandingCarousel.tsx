@@ -4,9 +4,7 @@ import {
   Pagination,
   Scrollbar,
   A11y,
-  EffectFade,
   Autoplay,
-  Zoom,
 } from "swiper/modules";
 import { useDiscoverMovies } from "@/hooks/useDiscoverMovies";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -21,7 +19,7 @@ import { MovieType } from "@/types/types";
 import { EffectCoverflow } from "swiper/modules";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { SignedIn, SignInButton } from "@clerk/nextjs";
+import { SignInButton } from "@clerk/nextjs";
 import { Spinner } from "../ui/spinner";
 import { Badge } from "../ui/badge";
 import { useUser } from "@clerk/nextjs";

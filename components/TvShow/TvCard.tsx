@@ -28,7 +28,7 @@ const TVCard = ({ show }: { show: TvWithExtras }) => {
     >
       <div className="relative overflow-hidden group z-50">
         <Tilt rotationFactor={6}>
-          <div className="relative w-full aspect-[16/9] overflow-hidden rounded">
+          <div className="relative w-full aspect-video overflow-hidden rounded">
             {/* Skeleton while image loads */}
             {loading && <Skeleton className="absolute inset-0" />}
 

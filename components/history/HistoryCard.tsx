@@ -1,6 +1,4 @@
 "use client";
-
-import { contentType } from "@/lib/actions/favorite.action";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "../ui/badge";

@@ -3,7 +3,6 @@
 import GradientText from "../GradientText";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import Image from "next/image";
 
 const AboutUs = () => {
   return (

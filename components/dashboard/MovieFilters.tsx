@@ -9,7 +9,6 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
@@ -20,7 +19,6 @@ import { Separator } from "../ui/separator";
 const MovieFilters = () => {
   const { filters, setSortBy, toggleGenre, setYear, resetFilters, setType } =
     useFiltersStore();
-  console.log(filters);
 
   const { data: movieGenres, isPending } = useQuery(genreOptions());
   const { data: tvGenres } = useTvGenre();

@@ -3,7 +3,7 @@
 import { useGetPopularActors } from "@/hooks/useGetActor";
 import LazyImage from "../LazyImage";
 import Link from "next/link";
-import { Star, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 
 const PopularActors = () => {
   const { data: actors, isLoading } = useGetPopularActors();

@@ -28,7 +28,7 @@ const MovieCard = ({ movie }: { movie: MovieType }) => {
     >
       <div className="relative overflow-hidden group z-50">
         <Tilt rotationFactor={6}>
-          <div className="relative w-full aspect-[16/9] overflow-hidden rounded">
+          <div className="relative w-full aspect-video overflow-hidden rounded">
             {/* Skeleton */}
             {loading && <Skeleton className="absolute inset-0" />}
 

@@ -1,8 +1,5 @@
 "use client";
 import { useGetDbFavorites } from "@/hooks/useGetDbFavorites";
-import MovieCard from "../Movie/MovieCard";
-import TVCard from "../TvShow/TvCard";
-import { MovieType, TvWithExtras } from "@/types/types";
 import GradientText from "../GradientText";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import FavoriteMovieCard from "./FavoriteMovieCard";

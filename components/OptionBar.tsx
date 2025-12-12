@@ -2,7 +2,6 @@
 import { Button } from "./ui/button";
 import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ListPlus } from "lucide-react";
 import { MovieType, TvWithExtras } from "@/types/types";
 import { useGetDbFavorites } from "@/hooks/useGetDbFavorites";
 import { useAddFavorite } from "@/lib/mutations/useAddFavorite";
@@ -57,9 +56,6 @@ const OptionBar = ({ content, type }: OptionBarProps) => {
               : "fill-gray-500 text-gray-500"
           )}
         />
-      </Button>
-      <Button variant="secondary" size="icon" disabled={isPending}>
-        <ListPlus />
       </Button>
     </div>
   );
