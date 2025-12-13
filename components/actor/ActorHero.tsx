@@ -16,7 +16,7 @@ export const ActorHero = ({ actor }: ActorHeroProps) => {
     : "/placeholder.png";
 
   return (
-    <div className="relative w-full overflow-hidden rounded-3xl bg-gray-900/50 border border-white/5">
+    <div className="relative max-w-7xl mx-auto overflow-hidden rounded-3xl bg-gray-900/50 border border-white/5">
       {/* Background Graphic */}
       <div className="absolute inset-0 z-0">
         {backdrop && (

@@ -270,13 +270,16 @@ const MovieShowcase = ({ id }: { id: number }) => {
       {/* Similar Movies */}
       <section className="py-20">
         <h2 className="text-3xl font-bold my-6">You may also like</h2>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-6">
+        <div
+          key={movie.id}
+          className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-6"
+        >
           {movie?.similar &&
-            movie?.similar.results
-              .slice(0, 8)
-              .map((movie: MovieType) => (
-                <MovieCard movie={movie} key={movie.id} />
-              ))}
+            movie?.similar.results.slice(0, 8).map((movie: MovieType) => (
+              <div key={movie.id}>
+                <MovieCard movie={movie} />
+              </div>
+            ))}
         </div>
       </section>
     </div>

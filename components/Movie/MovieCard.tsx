@@ -6,29 +6,57 @@ import { Tilt } from "@/components/motion-primitives/tilt";
 import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
 import { Skeleton } from "../ui/skeleton";
-import Link from "next/link";
 import { movieOptionsById } from "@/lib/queryOptions/movie.options";
 import { useQueryClient } from "@tanstack/react-query";
 import OptionBar from "../OptionBar";
-import { useAddHistory } from "@/lib/mutations/useAddHistory";
+import { useTransitionStore } from "@/store/transition.store";
+import { useRouter } from "next/navigation";
 
 const MovieCard = ({ movie }: { movie: MovieType }) => {
   const [loading, setLoading] = useState(true);
   const queryClient = useQueryClient();
-  const { mutate: addHistory } = useAddHistory();
+  const { setExpandingCard } = useTransitionStore();
+  const router = useRouter();
 
   const src = movie.backdrop_path
     ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
     : "/placeholder.png";
 
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    // Get the card's position
+    const cardElement = e.currentTarget.querySelector(".card-image");
+    if (cardElement) {
+      const rect = cardElement.getBoundingClientRect();
+
+      setExpandingCard({
+        id: movie.id,
+        src,
+        initialPosition: {
+          top: rect.top,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height,
+        },
+      });
+
+      // Navigate after animation starts
+      setTimeout(() => {
+        router.push(`/movie/${movie.id}`);
+      }, 400);
+    }
+  };
+
   return (
-    <Link
-      href={`/movie/${movie.id}`}
+    <div
+      onClick={handleClick}
       onMouseEnter={() => queryClient.prefetchQuery(movieOptionsById(movie.id))}
+      className="cursor-pointer"
     >
       <div className="relative overflow-hidden group z-50">
         <Tilt rotationFactor={6}>
-          <div className="relative w-full aspect-video overflow-hidden rounded">
+          <div className="relative w-full aspect-video overflow-hidden rounded card-image">
             {/* Skeleton */}
             {loading && <Skeleton className="absolute inset-0" />}
 
@@ -73,7 +101,7 @@ const MovieCard = ({ movie }: { movie: MovieType }) => {
         </Tilt>
         <OptionBar content={movie} type="Movie" />
       </div>
-    </Link>
+    </div>
   );
 };
 

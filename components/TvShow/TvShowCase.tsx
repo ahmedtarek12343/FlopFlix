@@ -12,10 +12,11 @@ import TvSeasons from "./TvSeasons";
 import TvCard from "./TvCard";
 import ReviewSection from "../Movie/ReviewSection";
 import { TvWithExtras } from "@/types/types";
-import { addToHistory } from "@/lib/actions/history.action";
+import { useAddHistory } from "@/lib/mutations/useAddHistory";
 
 const TvShowCase = ({ id }: { id: number }) => {
   const { data: show, isPending, isError } = useTvOptionsById(id);
+  const { mutate: addToHistory } = useAddHistory();
 
   const {
     index,
@@ -29,6 +30,7 @@ const TvShowCase = ({ id }: { id: number }) => {
   } = useGalleryStore();
 
   useEffect(() => {
+    if (!show) return;
     addToHistory({
       type: "TV",
       contentId: id,

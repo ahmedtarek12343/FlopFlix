@@ -11,8 +11,6 @@ const ActorShowcase = ({ id }: { id: string }) => {
 
   const actor = data as unknown as Actor;
 
-  console.log(actor);
-
   if (isLoading) {
     return (
       <div className="flex h-[50vh] w-full items-center justify-center">

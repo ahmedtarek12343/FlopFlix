@@ -11,9 +11,13 @@ import { TvWithExtras } from "@/types/types";
 import { tvOptionsById } from "@/lib/queryOptions/tv.options";
 import { useQueryClient } from "@tanstack/react-query";
 import OptionBar from "../OptionBar";
+import { useRouter } from "next/navigation";
+import { useTransitionStore } from "@/store/transition.store";
 
 const TVCard = ({ show }: { show: TvWithExtras }) => {
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const { setExpandingCard } = useTransitionStore();
 
   const queryClient = useQueryClient();
 
@@ -21,14 +25,37 @@ const TVCard = ({ show }: { show: TvWithExtras }) => {
     ? `https://image.tmdb.org/t/p/original${show.backdrop_path}`
     : "/placeholder.png";
 
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    // Get the card's position
+    const cardElement = e.currentTarget.querySelector(".card-image");
+    if (cardElement) {
+      const rect = cardElement.getBoundingClientRect();
+
+      setExpandingCard({
+        id: show.id,
+        src,
+        initialPosition: {
+          top: rect.top,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height,
+        },
+      });
+
+      // Navigate after animation starts
+      setTimeout(() => {
+        router.push(`/tv/${show.id}`);
+      }, 400);
+    }
+  };
+
   return (
-    <Link
-      href={`/tv/${show.id}`}
-      onMouseEnter={() => queryClient.prefetchQuery(tvOptionsById(show.id))}
-    >
+    <div onClick={handleClick} className="cursor-pointer">
       <div className="relative overflow-hidden group z-50">
         <Tilt rotationFactor={6}>
-          <div className="relative w-full aspect-video overflow-hidden rounded">
+          <div className="relative w-full aspect-video overflow-hidden rounded card-image">
             {/* Skeleton while image loads */}
             {loading && <Skeleton className="absolute inset-0" />}
 
@@ -82,7 +109,7 @@ const TVCard = ({ show }: { show: TvWithExtras }) => {
         </Tilt>
         <OptionBar content={show} type="TV" />
       </div>
-    </Link>
+    </div>
   );
 };
 

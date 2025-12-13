@@ -2,6 +2,7 @@
 import { useGetHistory } from "@/hooks/useGetHistory";
 import HistoryCard from "./HistoryCard";
 import { Loader2Icon } from "lucide-react";
+import { motion } from "framer-motion";
 const HistoryComp = () => {
   const { data, isPending } = useGetHistory();
 
@@ -25,8 +26,24 @@ const HistoryComp = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {history.map((item) => (
-            <HistoryCard key={item.id} item={item} />
+          {history.map((item, index) => (
+            <motion.div
+              key={item.id}
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.1,
+              }}
+            >
+              <HistoryCard item={item} />
+            </motion.div>
           ))}
         </div>
       )}
