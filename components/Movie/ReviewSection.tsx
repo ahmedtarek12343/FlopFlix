@@ -6,6 +6,7 @@ import MovieAddReview from "./MovieAddReview";
 import ReviewCard from "./ReviewCard";
 import { useGetReviews } from "@/hooks/useGetReviews";
 import { useFiltersStore } from "@/store/filters.store";
+import { motion } from "framer-motion";
 
 const ReviewSection = ({
   fullMovie,
@@ -20,26 +21,54 @@ const ReviewSection = ({
     <div>
       {/* Some Reviews */}
       <section className="py-10">
-        <h2 className="text-3xl font-bold mb-6">Reviews</h2>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(600px,1fr))] gap-8">
+        <motion.h2
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-3xl font-bold mb-6"
+        >
+          Reviews
+        </motion.h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {fullMovie?.reviews?.results.length === 0 && (
             <p className="pl-5 font-semibold">No reviews found</p>
           )}
           {fullMovie?.reviews &&
             fullMovie?.reviews.results
               .slice(0, 3)
-              .map((review: MovieReview) => (
-                <ReviewCard review={review} key={review.id} />
+              .map((review: MovieReview, index: number) => (
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  key={review.id}
+                >
+                  <ReviewCard review={review} />
+                </motion.div>
               ))}
           {DBreviews &&
-            DBreviews.map((review: any) => (
-              <ReviewCard review={review} key={review.id} />
+            DBreviews.map((review: any, index: number) => (
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                key={review.id}
+              >
+                <ReviewCard review={review} />
+              </motion.div>
             ))}
         </div>
-        <Button onClick={() => setShowReviewModal(true)} className="mt-7">
-          <Plus />
-          Add Review
-        </Button>
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mt-7"
+        >
+          <Button onClick={() => setShowReviewModal(true)}>
+            <Plus />
+            Add Review
+          </Button>
+        </motion.div>
       </section>
       <MovieAddReview
         open={showReviewModal}

@@ -4,9 +4,11 @@ import GradientText from "../GradientText";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import FavoriteMovieCard from "./FavoriteMovieCard";
 import FavoriteShowCard from "./FavoriteShowCard";
+import LoadingSpinner from "../LoadingSpinner";
+import ErrorFallback from "../ErrorFallback";
 
 export default function FavoritesComp() {
-  const { data: favorites, isLoading } = useGetDbFavorites();
+  const { data: favorites, isPending, isError, refetch } = useGetDbFavorites();
 
   const movieQueries = favorites?.filter((fav) => fav.type === "Movie");
 
@@ -15,15 +17,12 @@ export default function FavoritesComp() {
   const movies = movieQueries || [];
   const shows = tvQueries || [];
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary mb-6" />
-        <p className="text-2xl text-white/80 font-light">
-          Loading Favorites...
-        </p>
-      </div>
-    );
+  if (isPending) {
+    return <LoadingSpinner />;
+  }
+
+  if (isError) {
+    return <ErrorFallback refetch={refetch} />;
   }
 
   return (

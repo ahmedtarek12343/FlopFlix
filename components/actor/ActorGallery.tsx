@@ -22,7 +22,7 @@ export const ActorGallery = ({ images, title }: ActorGalleryProps) => {
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold text-white px-1">{title}</h2>
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3 md:gap-4">
         {displayImages.map((img, i) => (
           <Dialog key={i}>
             <DialogTrigger asChild>

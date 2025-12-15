@@ -13,17 +13,17 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import Link from "next/link";
+import LoadingSpinner from "../LoadingSpinner";
+import ErrorFallback from "../ErrorFallback";
 
 const AnalyticsComp = () => {
-  const { data: history, isLoading } = useGetHistory();
+  const { data: history, isPending, isError, refetch } = useGetHistory();
+
   const [activeTab, setActiveTab] = useState("movies");
 
-  if (isLoading)
-    return (
-      <div className="flex items-center justify-center p-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
+  if (isPending) return <LoadingSpinner />;
+
+  if (isError) return <ErrorFallback refetch={refetch} />;
 
   // Filter by type
   const movieHistory =

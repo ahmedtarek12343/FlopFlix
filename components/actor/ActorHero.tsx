@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Actor } from "./types";
 import { ActorSocials } from "./ActorSocials";
 import { ActorBio } from "./ActorBio";
-import { Calendar, MapPin, User, Cake } from "lucide-react";
+import { MapPin, User, Cake } from "lucide-react";
 
 interface ActorHeroProps {
   actor: Actor;
@@ -16,41 +16,27 @@ export const ActorHero = ({ actor }: ActorHeroProps) => {
     : "/placeholder.png";
 
   return (
-    <div className="relative max-w-7xl mx-auto overflow-hidden rounded-3xl bg-gray-900/50 border border-white/5">
-      {/* Background Graphic */}
-      <div className="absolute inset-0 z-0">
-        {backdrop && (
-          <Image
-            src={`https://image.tmdb.org/t/p/original${backdrop}`}
-            alt=""
-            fill
-            className="object-cover opacity-20 blur-3xl scale-110"
-          />
-        )}
-        <div className="absolute inset-0 bg-linear-to-t from-background via-background/80 to-transparent" />
-      </div>
-
-      <div className="relative z-10 flex flex-col md:flex-row gap-8 p-8 md:p-12 items-start">
+    <div className="relative w-full overflow-hidden rounded-3xl bg-gray-900/50 border border-white/5">
+      <div className="relative z-10 flex flex-col md:flex-row gap-6 md:gap-8 p-6 md:p-12 items-start">
         {/* Profile Image */}
-        <div className="shrink-0 relative group">
-          <div className="absolute -inset-1 rounded-2xl bg-linear-to-r from-primary to-purple-600 opacity-20 blur transition duration-500 group-hover:opacity-40" />
+        <div className="md:flex hidden relative group">
           <Image
             src={profileUrl}
             alt={actor.name}
-            width={300}
-            height={450}
+            width={400}
+            height={600}
             className="relative rounded-2xl object-cover shadow-2xl transition duration-500 group-hover:scale-[1.01]"
             priority
           />
         </div>
 
         {/* Info */}
-        <div className="flex-1 space-y-6 pt-2">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-linear-to-r from-white to-gray-400">
+        <div className="space-y-6 pt-2 w-full">
+          <div className="text-center md:text-left">
+            <h1 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-linear-to-r from-white to-gray-400">
               {actor.name}
             </h1>
-            <p className="text-xl text-primary font-medium mt-2 flex items-center gap-2">
+            <p className="text-lg md:text-xl text-primary font-medium mt-2 flex items-center justify-center md:justify-start gap-2">
               <User size={18} /> {actor.known_for_department}
             </p>
           </div>

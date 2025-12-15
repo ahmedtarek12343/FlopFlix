@@ -20,20 +20,17 @@ import { EffectCoverflow } from "swiper/modules";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { SignInButton } from "@clerk/nextjs";
-import { Spinner } from "../ui/spinner";
 import { Badge } from "../ui/badge";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
+import LoadingSpinner from "../LoadingSpinner";
+import ErrorFallback from "../ErrorFallback";
 const LandingCarousel = () => {
-  const { data: movies, isPending } = useDiscoverMovies();
+  const { data: movies, isPending, isError, refetch } = useDiscoverMovies();
   const { user } = useUser();
 
-  if (isPending)
-    return (
-      <div className="h-screen grid place-items-center">
-        <Spinner className="size-12 animate-spin text-primary" />
-      </div>
-    );
+  if (isPending) return <LoadingSpinner />;
+  if (isError) return <ErrorFallback refetch={refetch} />;
   return (
     <div className="h-[80vh]">
       <Swiper
@@ -75,9 +72,9 @@ const LandingCarousel = () => {
                 className="object-cover zoomed-slide"
               />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/60" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/60 to-black/60" />
             <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0)_0%,rgba(0,0,0,0.3)_40%,rgba(0,0,0,0.7)_100%)]" />
-            <div className="absolute bottom-0 from-[var(--background)] to-transparent h-20 w-full bg-gradient-to-t" />
+            <div className="absolute bottom-0 from-[var(--background)] to-transparent h-20 w-full bg-linear-to-t" />
 
             <div className="absolute md:top-40 md:left-40 top-30 left-10 transform flex justify-center flex-col gap-3 items-start">
               <h2 className="text-[clamp(2rem,5vw,5rem)] font-bold text-white">

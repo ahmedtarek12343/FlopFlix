@@ -25,8 +25,8 @@ export function ExpandingOverlay() {
             height: "100vh",
             borderRadius: "0rem",
           }}
-          exit={{ opacity: 0, transition: { duration: 0.8, ease: "circIn" } }}
-          transition={{ duration: 0.8, ease: "circIn" }}
+          exit={{ opacity: 0, transition: { duration: 0.7, ease: "circIn" } }}
+          transition={{ duration: 0.7, ease: "circIn" }}
           className="z-[100] overflow-hidden bg-black"
           onAnimationComplete={clearExpandingCard}
         >

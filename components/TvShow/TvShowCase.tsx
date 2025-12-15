@@ -13,9 +13,11 @@ import TvCard from "./TvCard";
 import ReviewSection from "../Movie/ReviewSection";
 import { TvWithExtras } from "@/types/types";
 import { useAddHistory } from "@/lib/mutations/useAddHistory";
+import ErrorFallback from "../ErrorFallback";
+import LoadingSpinner from "../LoadingSpinner";
 
 const TvShowCase = ({ id }: { id: number }) => {
-  const { data: show, isPending, isError } = useTvOptionsById(id);
+  const { data: show, isPending, isError, refetch } = useTvOptionsById(id);
   const { mutate: addToHistory } = useAddHistory();
 
   const {
@@ -51,20 +53,11 @@ const TvShowCase = ({ id }: { id: number }) => {
     }
   }, [index]);
   if (isPending) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <Loader2Icon className="size-16 animate-spin text-primary mb-4" />
-        <p className="text-xl text-white/80">Loading TV Show...</p>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (isError || !show) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-red-900 to-red-900">
-        <p className="text-2xl text-white">Error loading TV Show</p>
-      </div>
-    );
+    return <ErrorFallback refetch={refetch} />;
   }
 
   const backdropUrl = show.backdrop_path
@@ -150,7 +143,7 @@ const TvShowCase = ({ id }: { id: number }) => {
             priority
             className="object-cover brightness-50"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-background via-background/70 to-transparent" />
         </div>
       )}
 

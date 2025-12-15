@@ -5,21 +5,18 @@ import LazyImage from "../LazyImage";
 import Link from "next/link";
 import { TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
+import LoadingSpinner from "../LoadingSpinner";
+import ErrorFallback from "../ErrorFallback";
 
 const PopularActors = () => {
-  const { data: actors, isLoading } = useGetPopularActors();
+  const { data: actors, isPending, isError, refetch } = useGetPopularActors();
 
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 p-4">
-        {[...Array(10)].map((_, i) => (
-          <div
-            key={i}
-            className="aspect-[2/3] animate-pulse rounded-xl bg-gray-800"
-          />
-        ))}
-      </div>
-    );
+  if (isPending) {
+    return <LoadingSpinner />;
+  }
+
+  if (isError) {
+    return <ErrorFallback refetch={refetch} />;
   }
 
   if (!actors || actors.length === 0) {

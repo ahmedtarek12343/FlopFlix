@@ -5,14 +5,21 @@ import Link from "next/link";
 import LazyImage from "../LazyImage";
 import { TvWithExtras } from "@/types/types";
 
+import { motion } from "framer-motion";
+
 const TvPoster = ({ show }: { show: TvWithExtras }) => {
   return (
     <div className="relative -mt-32 md:-mt-48 max-w-7xl mx-auto px-6 pb-20">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Poster + Key Info */}
-        <div className="space-y-6">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="space-y-6"
+        >
           <div className="relative">
-            <div className="backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border ">
+            <div className="backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border">
               <LazyImage
                 src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
                 alt={show.name}
@@ -51,7 +58,7 @@ const TvPoster = ({ show }: { show: TvWithExtras }) => {
 
           {/* Quick Info Cards */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="backdrop-blur border  rounded-xl p-4">
+            <div className="backdrop-blur border rounded-xl p-4">
               <Calendar className="size-5 text-gray-400 mb-1" />
               <p className="text-xs text-gray-400">First Air</p>
               <p className="font-semibold">
@@ -60,26 +67,31 @@ const TvPoster = ({ show }: { show: TvWithExtras }) => {
                   : "N/A"}
               </p>
             </div>
-            <div className=" backdrop-blur border  rounded-xl p-4">
+            <div className="backdrop-blur border rounded-xl p-4">
               <Clock className="size-5 text-gray-400 mb-1" />
               <p className="text-xs text-gray-400">Seasons</p>
               <p className="font-semibold">{show.number_of_seasons}</p>
             </div>
-            <div className=" backdrop-blur border  rounded-xl p-4">
+            <div className="backdrop-blur border rounded-xl p-4">
               <Tv className="size-5 text-gray-400 mb-1" />
               <p className="text-xs text-gray-400">Episodes</p>
               <p className="font-semibold">{show.number_of_episodes}</p>
             </div>
-            <div className=" backdrop-blur border  rounded-xl p-4">
+            <div className="backdrop-blur border rounded-xl p-4">
               <Users className="size-5 text-gray-400 mb-1" />
               <p className="text-xs text-gray-400">Popularity</p>
               <p className="font-semibold">{Math.round(show.popularity)}</p>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Main Content */}
-        <div className="lg:col-span-2 space-y-8">
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="lg:col-span-2 space-y-8"
+        >
           {/* Overview */}
           <section>
             <h2 className="text-3xl font-bold mb-4">Overview</h2>
@@ -90,7 +102,11 @@ const TvPoster = ({ show }: { show: TvWithExtras }) => {
 
           {/* Genres */}
           {show.genres.length > 0 && (
-            <section>
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
               <h3 className="text-xl font-semibold mb-3">Genres</h3>
               <div className="flex flex-wrap gap-2">
                 {show.genres.map((genre) => (
@@ -102,7 +118,7 @@ const TvPoster = ({ show }: { show: TvWithExtras }) => {
                   </span>
                 ))}
               </div>
-            </section>
+            </motion.section>
           )}
 
           {/* Networks */}
@@ -196,7 +212,7 @@ const TvPoster = ({ show }: { show: TvWithExtras }) => {
               </div>
             )}
           </section>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

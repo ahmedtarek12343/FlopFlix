@@ -1,6 +1,7 @@
 "use client";
 import LogoLoop from "../LogoLoop";
 import GradientText from "../GradientText";
+import { motion } from "framer-motion";
 const imageLogos = [
   {
     src: "https://1000logos.net/wp-content/uploads/2025/10/CALB-Logo.png",
@@ -30,8 +31,14 @@ const imageLogos = [
 ];
 const TrustedPartners = () => {
   return (
-    <>
-      <div className="text-center py-10 font-bold text-3xl">
+    <section className="py-24 space-y-12">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="text-center font-bold text-4xl md:text-5xl"
+      >
         <GradientText
           colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
           animationSpeed={3}
@@ -39,23 +46,23 @@ const TrustedPartners = () => {
         >
           Trusted Partners
         </GradientText>
-      </div>
+      </motion.div>
       <div style={{ position: "relative", overflow: "hidden" }}>
         {/* Basic horizontal loop */}
         <LogoLoop
           logos={imageLogos}
           speed={120}
           direction="left"
-          logoHeight={70}
-          gap={40}
+          logoHeight={90}
+          gap={80}
           hoverSpeed={0}
           scaleOnHover
           fadeOut
-          fadeOutColor="#fffff008"
+          fadeOutColor="#191919" // approximate dark background color
           ariaLabel="Technology partners"
         />
       </div>
-    </>
+    </section>
   );
 };
 

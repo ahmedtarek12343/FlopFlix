@@ -7,6 +7,8 @@ import { MoveLeftIcon, PlayIcon, ImagesIcon, UsersIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Actor, VideoResult } from "@/types/types";
 import Link from "next/link";
+import LoadingSpinner from "../LoadingSpinner";
+import ErrorFallback from "../ErrorFallback";
 
 const TvSeasonDetails = ({
   id,
@@ -19,14 +21,14 @@ const TvSeasonDetails = ({
     data: seasonDetails,
     isPending,
     isError,
+    refetch,
   } = useTvSeasonDetails(Number(id), Number(seasonNumber));
   console.log(seasonDetails);
 
   const router = useRouter();
 
-  if (isPending) return <div className="p-10 text-center">Loading...</div>;
-  if (isError)
-    return <div className="p-10 text-center">Error loading season</div>;
+  if (isPending) return <LoadingSpinner />;
+  if (isError) return <ErrorFallback refetch={() => refetch()} />;
 
   const episodes = seasonDetails.episodes || [];
   const posters = seasonDetails.images?.posters || [];

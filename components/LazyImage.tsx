@@ -9,7 +9,7 @@ const LazyImage = ({ ...props }: ImageProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
-    <>
+    <div className="w-full h-full">
       {!isLoaded && <Skeleton className="w-full h-full" />}
       <Image
         {...props}
@@ -18,7 +18,7 @@ const LazyImage = ({ ...props }: ImageProps) => {
         onLoad={() => setIsLoaded(true)}
         className="w-full h-full hover:scale-105 transition-all duration-300"
       />
-    </>
+    </div>
   );
 };
 

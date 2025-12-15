@@ -1,4 +1,5 @@
 import { MovieType } from "@/types/types";
+import { motion } from "framer-motion";
 
 const MovieVideos = ({ fullMovie }: { fullMovie: MovieType }) => {
   const videos = fullMovie?.videos?.results;
@@ -6,7 +7,13 @@ const MovieVideos = ({ fullMovie }: { fullMovie: MovieType }) => {
   return (
     <section className="py-20">
       <h2 className="text-3xl font-bold my-6">Official Trailer</h2>
-      <div className="">
+
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ ease: "easeInOut", delay: 0.8 }}
+        className=""
+      >
         {videos && (
           <div key={trailerKey} className="overflow-hidden max-w-7xl mx-auto">
             <iframe
@@ -18,7 +25,7 @@ const MovieVideos = ({ fullMovie }: { fullMovie: MovieType }) => {
             ></iframe>
           </div>
         )}
-      </div>
+      </motion.div>
     </section>
   );
 };

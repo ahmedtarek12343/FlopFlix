@@ -17,9 +17,12 @@ import MovieGallery from "./MovieGallery";
 import MovieVideos from "./MovieVideos";
 import MovieCast from "./MovieCast";
 import { useAddHistory } from "@/lib/mutations/useAddHistory";
+import { motion } from "framer-motion";
+import LoadingSpinner from "../LoadingSpinner";
+import ErrorFallback from "../ErrorFallback";
 
 const MovieShowcase = ({ id }: { id: number }) => {
-  const { data: movie, isPending, isError } = useGetMovieByID(id);
+  const { data: movie, isPending, isError, refetch } = useGetMovieByID(id);
 
   const {
     gallery,
@@ -57,20 +60,11 @@ const MovieShowcase = ({ id }: { id: number }) => {
 
   // Loading State
   if (isPending) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary mb-6" />
-        <p className="text-2xl text-white/80 font-light">Loading Movie...</p>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (isError || !movie) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-red-950 to-black">
-        <p className="text-3xl text-white font-bold">Failed to load movie</p>
-      </div>
-    );
+    return <ErrorFallback refetch={refetch} />;
   }
 
   const backdropUrl = movie.backdrop_path
@@ -80,6 +74,7 @@ const MovieShowcase = ({ id }: { id: number }) => {
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : "/placeholder-movie.png";
+  const MotionImage = motion(Image);
 
   return (
     <div className="min-h-screen bg-background text-white overflow-x-hidden relative">
@@ -87,11 +82,12 @@ const MovieShowcase = ({ id }: { id: number }) => {
         <>
           {/* Centered modal */}
           <div className="fixed inset-0 flex items-center justify-center z-60">
-            <div className="relative max-w-7xl  w-[90%] z-55">
+            <div className="relative max-w-7xl w-[90%] z-55">
               {/* Image */}
-              <Image
+              <MotionImage
                 src={gallery}
                 alt={movie.title}
+                transition={{ duration: 2 }}
                 width={500}
                 height={750}
                 priority
@@ -111,22 +107,22 @@ const MovieShowcase = ({ id }: { id: number }) => {
               </Button>
 
               {/* Next and Previous buttons */}
-              <Button
+              <button
                 onClick={() => decrementIndex()}
                 disabled={index === 0}
-                className="absolute top-1/2 left-3 z-70 transform -translate-y-1/2"
+                className="absolute disabled:opacity-50 hover:scale-110 transition-all top-1/2 left-5 z-70 transform -translate-y-1/2"
               >
                 <ArrowLeft className="size-6 text-white" />
-              </Button>
-              <Button
+              </button>
+              <button
                 onClick={() => {
                   incrementIndex();
                 }}
                 disabled={index === 11}
-                className="absolute top-1/2 right-3 z-70 transform -translate-y-1/2"
+                className="absolute disabled:opacity-50 hover:scale-110 transition-all top-1/2 right-5 z-70 transform -translate-y-1/2"
               >
                 <ArrowRight className="size-6 text-white" />
-              </Button>
+              </button>
             </div>
             <div
               onClick={() => {
@@ -184,9 +180,14 @@ const MovieShowcase = ({ id }: { id: number }) => {
           </Button>
 
           {/* Hero Content */}
-          <div className="absolute bottom-0 left-0 right-0 lg:p-16 max-w-7xl mx-auto">
+          <div className="absolute bottom-0 left-0 right-0 max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-end">
-              <div className="relative lg:block hidden aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl border-2 border-primary">
+              <motion.div
+                initial={{ opacity: 0, x: -80 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="relative lg:block hidden aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl border-2 border-primary"
+              >
                 <Image
                   src={posterUrl}
                   alt={movie.title}
@@ -194,27 +195,64 @@ const MovieShowcase = ({ id }: { id: number }) => {
                   priority
                   className="object-cover  hover:scale-105 transition-all duration-300"
                 />
-              </div>
+              </motion.div>
 
               <div className="lg:col-span-2 space-y-6">
                 <div>
-                  <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-2">
-                    {movie.title}
-                  </h1>
+                  <motion.h1 className="text-2xl flex md:text-4xl font-black tracking-wide mb-2">
+                    {movie.title
+                      .split("")
+                      .map((char: string, index: number) => (
+                        <motion.p
+                          key={index}
+                          initial={{ opacity: 0, y: -70 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            duration: 0.3,
+                            ease: "easeInOut",
+                            delay: index * 0.065,
+                          }}
+                        >
+                          {char === " " ? "\u00A0" : char}
+                        </motion.p>
+                      ))}
+                  </motion.h1>
                   {movie.tagline && (
-                    <p className="text-2xl md:text-3xl text-gray-300 italic font-light">
-                      {movie.tagline}
+                    <p className="text-2xl flex md:text-3xl text-gray-300 italic font-light">
+                      {movie.tagline
+                        .split("")
+                        .map((char: string, index: number) => (
+                          <motion.span
+                            key={index}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{
+                              duration: 0.3,
+                              ease: "easeInOut",
+                              delay: index * 0.09,
+                            }}
+                          >
+                            {char === " " ? "\u00A0" : char}
+                          </motion.span>
+                        ))}
                     </p>
                   )}
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4 text-lg">
-                  <div className="flex items-center gap-6">
+                  <motion.div className="flex items-center gap-6">
                     {movie.Ratings &&
-                      movie.Ratings.map((rating: any) => (
-                        <div
+                      movie.Ratings.map((rating: any, index: number) => (
+                        <motion.div
                           key={rating.Source}
                           className="flex items-center gap-2"
+                          initial={{ opacity: 0, x: 50 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{
+                            duration: 0.3,
+                            ease: "easeInOut",
+                            delay: index * 0.3,
+                          }}
                         >
                           <Image
                             src={rating.Image}
@@ -223,65 +261,160 @@ const MovieShowcase = ({ id }: { id: number }) => {
                             height={24}
                           />{" "}
                           {rating.Value}
-                        </div>
+                        </motion.div>
                       ))}
-                  </div>
-                  <Badge variant="secondary" className="text-lg px-4 py-2">
-                    {movie.Rated || "N/A"}
-                  </Badge>
-                  <Badge
-                    variant="outline"
-                    className="text-lg px-4 py-2 border-white/50"
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{
+                      duration: 0.3,
+                      ease: "easeInOut",
+                      delay: 1,
+                    }}
+                    className="flex items-center gap-4"
                   >
-                    {movie.Year || "N/A"}
-                  </Badge>
-                  <Badge variant="outline" className="text-lg px-4 py-2">
-                    <Clock className="size-4 mr-1" />
-                    {movie.Runtime || "N/A"}
-                  </Badge>
+                    <Badge variant="secondary" className="text-lg px-4 py-2">
+                      {movie.Rated || "N/A"}
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className="text-lg px-4 py-2 border-white/50"
+                    >
+                      {movie.Year || "N/A"}
+                    </Badge>
+                    <Badge variant="outline" className="text-lg px-4 py-2">
+                      <Clock className="size-4 mr-1" />
+                      {movie.Runtime || "N/A"}
+                    </Badge>
+                  </motion.div>
                 </div>
 
                 <div className="flex flex-wrap gap-3">
-                  {movie.genres?.map((g: { id: number; name: string }) => (
-                    <Badge
-                      key={g.id}
-                      className="bg-primary/70 border-primary text-white px-4 py-2"
-                    >
-                      {g.name.trim()}
-                    </Badge>
-                  ))}
+                  {movie.genres?.map(
+                    (g: { id: number; name: string }, index: number) => (
+                      <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.6,
+                          ease: "easeInOut",
+                          delay: index * 0.1,
+                        }}
+                        key={g.id}
+                      >
+                        <Badge className="bg-primary/70 border-primary text-white px-4 py-2">
+                          {g.name.trim()}
+                        </Badge>
+                      </motion.div>
+                    )
+                  )}
                 </div>
 
-                <p className="text-xl leading-relaxed text-gray-200 max-w-4xl">
+                <motion.p
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.6,
+                    ease: "easeInOut",
+                    delay: 1,
+                  }}
+                  className="text-xl leading-relaxed text-gray-200 max-w-4xl"
+                >
                   {movie.Plot}
-                </p>
+                </motion.p>
               </div>
             </div>
           </div>
         </div>
       )}
-      <MovieCast fullMovie={movie} />
-      {/* Reviews */}
-      <ReviewSection fullMovie={movie} />
-      {/* Gallery */}
-      <MovieGallery fullMovie={movie} />
-      {/* Videos */}
-      <MovieVideos fullMovie={movie} />
-      {/* Similar Movies */}
-      <section className="py-20">
-        <h2 className="text-3xl font-bold my-6">You may also like</h2>
-        <div
-          key={movie.id}
-          className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-6"
+      <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-20 py-20 pb-40">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          {movie?.similar &&
-            movie?.similar.results.slice(0, 8).map((movie: MovieType) => (
-              <div key={movie.id}>
-                <MovieCard movie={movie} />
-              </div>
-            ))}
-        </div>
-      </section>
+          <MovieCast fullMovie={movie} />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
+          <ReviewSection fullMovie={movie} />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
+          <MovieGallery fullMovie={movie} />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
+          <MovieVideos fullMovie={movie} />
+        </motion.div>
+
+        {/* Similar Movies */}
+        <section>
+          <motion.h2
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="text-3xl font-bold mb-8 flex items-center gap-3"
+          >
+            <span className="w-1 h-8 bg-primary rounded-full" />
+            You may also like
+          </motion.h2>
+          <motion.div
+            key={movie.id}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1,
+                },
+              },
+            }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {movie?.similar &&
+              movie?.similar.results.slice(0, 9).map((movie: MovieType) => (
+                <motion.div
+                  key={movie.id}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    show: {
+                      opacity: 1,
+                      y: 0,
+                      transition: {
+                        type: "spring",
+                        stiffness: 50,
+                        damping: 20,
+                      },
+                    },
+                  }}
+                >
+                  <MovieCard movie={movie} />
+                </motion.div>
+              ))}
+          </motion.div>
+        </section>
+      </div>
     </div>
   );
 };

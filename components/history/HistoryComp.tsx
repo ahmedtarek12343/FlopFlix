@@ -1,20 +1,20 @@
 "use client";
 import { useGetHistory } from "@/hooks/useGetHistory";
 import HistoryCard from "./HistoryCard";
-import { Loader2Icon } from "lucide-react";
 import { motion } from "framer-motion";
+import LoadingSpinner from "../LoadingSpinner";
+import ErrorFallback from "../ErrorFallback";
 const HistoryComp = () => {
-  const { data, isPending } = useGetHistory();
+  const { data, isPending, isError, refetch } = useGetHistory();
 
   const history = data || [];
 
   if (isPending) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <Loader2Icon className="size-16 animate-spin text-primary mb-4" />
-        <p className="text-xl text-white/80">Loading History...</p>
-      </div>
-    );
+    return <LoadingSpinner />;
+  }
+
+  if (isError) {
+    return <ErrorFallback refetch={refetch} />;
   }
 
   return (

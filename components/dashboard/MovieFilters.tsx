@@ -15,6 +15,7 @@ import {
 import { FilterIcon, XIcon } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
+import { motion } from "framer-motion";
 
 const MovieFilters = () => {
   const { filters, setSortBy, toggleGenre, setYear, resetFilters, setType } =

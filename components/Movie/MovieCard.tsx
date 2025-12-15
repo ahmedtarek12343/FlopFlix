@@ -11,6 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import OptionBar from "../OptionBar";
 import { useTransitionStore } from "@/store/transition.store";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 const MovieCard = ({ movie }: { movie: MovieType }) => {
   const [loading, setLoading] = useState(true);
@@ -44,7 +45,7 @@ const MovieCard = ({ movie }: { movie: MovieType }) => {
       // Navigate after animation starts
       setTimeout(() => {
         router.push(`/movie/${movie.id}`);
-      }, 400);
+      }, 300);
     }
   };
 
@@ -73,7 +74,12 @@ const MovieCard = ({ movie }: { movie: MovieType }) => {
             />
 
             <div className="absolute inset-0 bg-black/10" />
-            <div className="absolute top-2 right-2 z-5">
+            <motion.div
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              className="absolute top-2 right-2 z-5"
+            >
               {movie.vote_average &&
               Number(movie.vote_average.toFixed(1)) > 7 ? (
                 <Badge className="bg-green-500 text-white px-2 py-1 rounded">
@@ -84,7 +90,7 @@ const MovieCard = ({ movie }: { movie: MovieType }) => {
                   {movie.vote_average && movie.vote_average.toFixed(1)}
                 </Badge>
               )}
-            </div>
+            </motion.div>
           </div>
 
           <div className="mt-2">

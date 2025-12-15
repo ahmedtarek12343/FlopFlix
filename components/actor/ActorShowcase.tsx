@@ -5,18 +5,20 @@ import { ActorHero } from "./ActorHero";
 import { ActorCredits } from "./ActorCredits";
 import { ActorGallery } from "./ActorGallery";
 import { Actor } from "./types";
+import ErrorFallback from "../ErrorFallback";
+import LoadingSpinner from "../LoadingSpinner";
 
 const ActorShowcase = ({ id }: { id: string }) => {
-  const { data, isLoading } = useGetActor(id);
+  const { data, isPending, isError, refetch } = useGetActor(id);
 
   const actor = data as unknown as Actor;
 
-  if (isLoading) {
-    return (
-      <div className="flex h-[50vh] w-full items-center justify-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-      </div>
-    );
+  if (isPending) {
+    return <LoadingSpinner />;
+  }
+
+  if (isError) {
+    return <ErrorFallback refetch={refetch} />;
   }
 
   if (!actor) {

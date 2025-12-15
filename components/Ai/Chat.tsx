@@ -79,7 +79,7 @@ export function Chat() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-100px)] max-w-5xl mx-auto w-full bg-background/50 backdrop-blur-sm rounded-3xl border border-border shadow-2xl overflow-hidden mt-4">
+    <div className="flex flex-col h-[calc(100vh-100px)] container mx-auto w-full bg-background/50 backdrop-blur-sm rounded-3xl border border-border shadow-2xl overflow-hidden mt-4">
       {/* Header */}
       <div className="p-4 border-b bg-muted/30 flex items-center gap-3">
         <div className="p-2 bg-primary/10 rounded-xl">

@@ -2,19 +2,18 @@
 import { useGetCollection } from "@/hooks/useGetCollection";
 import { CollectionHero } from "./CollectionHero";
 import { CollectionGrid } from "./CollectionGrid";
+import LoadingSpinner from "../LoadingSpinner";
+import ErrorFallback from "../ErrorFallback";
 
 export const CollectionComp = ({ id }: { id: string }) => {
-  const { data, isLoading, error } = useGetCollection(Number(id));
+  const { data, isPending, error, refetch } = useGetCollection(Number(id));
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary mb-6" />
-        <p className="text-2xl text-white/80 font-light">
-          Loading Collection...
-        </p>
-      </div>
-    );
+  if (isPending) {
+    return <LoadingSpinner />;
+  }
+
+  if (error || !data) {
+    return <ErrorFallback refetch={refetch} />;
   }
 
   if (error || !data) {
